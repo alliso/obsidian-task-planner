@@ -1,0 +1,167 @@
+/* ---- Board (Kanban) ---------------------------------------------------- */
+
+.task-planner-board .tp-board {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding: 12px;
+  height: 100%;
+}
+
+.task-planner-board .tp-column {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  max-height: 100%;
+}
+
+.task-planner-board .tp-column-orphan {
+  opacity: 0.85;
+  border: 1px dashed var(--background-modifier-border);
+}
+
+.task-planner-board .tp-column-header {
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  position: sticky;
+  top: 0;
+}
+
+.task-planner-board .tp-column-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  overflow-y: auto;
+  min-height: 60px;
+  flex: 1;
+}
+
+.task-planner-board .tp-column-list.tp-drop-over {
+  background: var(--background-modifier-hover);
+  border-radius: 6px;
+}
+
+.task-planner-board .tp-card {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: grab;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.task-planner-board .tp-card:hover {
+  border-color: var(--interactive-accent);
+}
+
+.task-planner-board .tp-card.tp-dragging {
+  opacity: 0.5;
+}
+
+.task-planner-board .tp-card-title {
+  font-size: var(--font-ui-small);
+  word-break: break-word;
+}
+
+.tp-card-archive {
+  margin-top: 8px;
+  font-size: var(--font-ui-smaller);
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+/* ---- Badges de prioridad ---------------------------------------------- */
+
+.tp-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: var(--font-ui-smaller);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tp-badge-low {
+  background: var(--background-modifier-border);
+  color: var(--text-muted);
+}
+
+.tp-badge-medium {
+  background: rgba(255, 196, 0, 0.2);
+  color: var(--text-normal);
+}
+
+.tp-badge-high {
+  background: rgba(255, 82, 82, 0.2);
+  color: var(--text-error);
+}
+
+/* ---- Backlog ----------------------------------------------------------- */
+
+.task-planner-backlog {
+  padding: 8px 12px;
+}
+
+.tp-backlog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tp-backlog-add {
+  cursor: pointer;
+}
+
+.tp-backlog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tp-backlog-empty {
+  color: var(--text-muted);
+  padding: 12px 0;
+  text-align: center;
+}
+
+.tp-backlog-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.tp-backlog-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.tp-backlog-info .tp-badge {
+  margin-top: 0;
+}
+
+.tp-backlog-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-backlog-promote {
+  cursor: pointer;
+  white-space: nowrap;
+}

@@ -1,0 +1,25 @@
+{
+  "name": "obsidian-task-planner",
+  "version": "0.1.0",
+  "description": "Gestión de tareas basada en notas con ciclo de vida backlog → board (Kanban) → archivadas.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "tasks",
+    "kanban"
+  ],
+  "author": "alliso",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.20.0",
+    "obsidian": "^1.4.11",
+    "typescript": "^5.4.0"
+  }
+}
