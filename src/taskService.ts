@@ -143,9 +143,10 @@ export class TaskService {
     const backlog = normalizePath(this.settings.backlogFolder);
     await this.ensureFolder(backlog);
 
-    const fileName = this.sanitizeFileName(title) || "Nueva tarea";
-    const path = await this.uniquePath(backlog, fileName);
     const today = moment().format("YYYY-MM-DD");
+    const slug = this.kebabCase(title) || "nueva-tarea";
+    const fileName = `${slug}-${moment().format("YYYYMMDD")}`;
+    const path = await this.uniquePath(backlog, fileName);
 
     const content = [
       "---",
@@ -160,9 +161,14 @@ export class TaskService {
     return this.app.vault.create(path, content);
   }
 
-  /** Elimina caracteres no válidos en nombres de archivo. */
-  private sanitizeFileName(name: string): string {
-    return name.replace(/[\\/:*?"<>|#^[\]]/g, "").trim();
+  /** Convierte un texto a kebab-case, apto para nombres de archivo. */
+  private kebabCase(name: string): string {
+    return name
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "") // elimina acentos
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-") // no alfanuméricos -> guion
+      .replace(/^-+|-+$/g, ""); // recorta guiones sobrantes
   }
 
   /** Devuelve una ruta única añadiendo un sufijo numérico si hace falta. */
