@@ -1,6 +1,6 @@
 {
   "name": "obsidian-task-planner",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Gestión de tareas basada en notas con ciclo de vida backlog → board (Kanban) → archivadas.",
   "main": "main.js",
   "scripts": {

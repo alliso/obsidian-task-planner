@@ -73,7 +73,7 @@ export class CreateTaskModal extends Modal {
     if (this.openAfterCreate) {
       await this.app.workspace.getLeaf(true).openFile(file);
     } else {
-      new Notice(`Tarea "${file.basename}" creada en el backlog.`);
+      new Notice(`Tarea "${title}" creada en el backlog.`);
     }
 
     this.onCreated?.(this.openAfterCreate);

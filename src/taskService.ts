@@ -1,5 +1,6 @@
 import {
   App,
+  CachedMetadata,
   Notice,
   TAbstractFile,
   TFile,
@@ -45,11 +46,12 @@ export class TaskService {
 
   /** Lee los metadatos de una nota-tarea desde el metadataCache. */
   readTask(file: TFile): TaskMeta {
-    const fm = this.app.metadataCache.getFileCache(file)?.frontmatter ?? {};
+    const cache = this.app.metadataCache.getFileCache(file);
+    const fm = cache?.frontmatter ?? {};
     const priority = fm.priority;
     return {
       file,
-      title: file.basename,
+      title: this.resolveTitle(file, cache),
       status: typeof fm.status === "string" ? fm.status : null,
       priority:
         priority === "low" || priority === "medium" || priority === "high"
@@ -57,6 +59,21 @@ export class TaskService {
           : null,
       created: typeof fm.created === "string" ? fm.created : null,
     };
+  }
+
+  /**
+   * Título visible de una tarea: `title` del frontmatter, y si no existe, el
+   * primer encabezado H1 de la nota. Como último recurso, el nombre del fichero
+   * (tareas creadas fuera del plugin o sin cachear todavía).
+   */
+  private resolveTitle(file: TFile, cache: CachedMetadata | null): string {
+    const fmTitle = cache?.frontmatter?.title;
+    if (typeof fmTitle === "string" && fmTitle.trim()) {
+      return fmTitle.trim();
+    }
+
+    const heading = cache?.headings?.find((h) => h.level === 1)?.heading.trim();
+    return heading || file.basename;
   }
 
   // --- Escritura de frontmatter -------------------------------------------
@@ -148,17 +165,17 @@ export class TaskService {
     const fileName = `${slug}-${moment().format("YYYYMMDD")}`;
     const path = await this.uniquePath(backlog, fileName);
 
-    const content = [
-      "---",
-      `priority: ${priority}`,
-      `created: ${today}`,
-      "---",
-      "",
-      `# ${title}`,
-      "",
-    ].join("\n");
+    const content = ["", `# ${title}`, ""].join("\n");
 
-    return this.app.vault.create(path, content);
+    const file = await this.app.vault.create(path, content);
+    // processFrontMatter serializa el YAML por nosotros: así el título admite
+    // comillas, dos puntos y demás caracteres sin romper el frontmatter.
+    await this.app.fileManager.processFrontMatter(file, (fm) => {
+      fm.title = title;
+      fm.priority = priority;
+      fm.created = today;
+    });
+    return file;
   }
 
   /** Convierte un texto a kebab-case, apto para nombres de archivo. */
