@@ -10,6 +10,10 @@ import {
 } from "obsidian";
 import { Priority, TaskMeta, TaskPlannerSettings } from "./types";
 
+// Los tipos de obsidian declaran `moment` con `import * as`, que no es invocable
+// con esModuleInterop (siempre activo desde TS 6); en ejecución sí es la función.
+const now = moment as unknown as () => ReturnType<typeof moment.utc>;
+
 /**
  * Lógica central de gestión de tareas: lee, crea, mueve y archiva notas-tarea,
  * apoyándose en la API nativa de Obsidian para no reinventar la E/S de ficheros.
@@ -160,9 +164,9 @@ export class TaskService {
     const backlog = normalizePath(this.settings.backlogFolder);
     await this.ensureFolder(backlog);
 
-    const today = moment().format("YYYY-MM-DD");
+    const today = now().format("YYYY-MM-DD");
     const slug = this.kebabCase(title) || "nueva-tarea";
-    const fileName = `${slug}-${moment().format("YYYYMMDD")}`;
+    const fileName = `${slug}-${now().format("YYYYMMDD")}`;
     const path = await this.uniquePath(backlog, fileName);
 
     const content = ["", `# ${title}`, ""].join("\n");
